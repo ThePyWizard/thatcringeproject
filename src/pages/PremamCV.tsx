@@ -38,23 +38,48 @@ const PremamCV = () => {
 
   const handleDownload = () => {
     if (!resumes) return;
-    
+  
     const content = `
-      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #e11d48; text-align: center;">Love Resume for ${formData.name}</h1>
-        
-        <h2 style="color: #4b5563;">Charming Version</h2>
-        <div style="background: #fff5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-          ${resumes.charming}
-        </div>
-        
-        <h2 style="color: #4b5563;">Roasting Version</h2>
-        <div style="background: #fff5f5; padding: 20px; border-radius: 8px;">
-          ${resumes.roasting}
-        </div>
-      </div>
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+            }
+            h1 {
+              color: #e11d48;
+              text-align: center;
+            }
+            h2 {
+              color: #4b5563;
+            }
+            .section {
+              background: #fff5f5;
+              padding: 20px;
+              border-radius: 8px;
+              margin-bottom: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Love Resume for ${formData.name}</h1>
+          
+          <h2>Charming Version</h2>
+          <div class="section">
+            <p class="whitespace-pre-wrap">${resumes.charming}</p>
+          </div>
+          
+          <h2>Roasting Version</h2>
+          <div class="section">
+            <p class="whitespace-pre-wrap">${resumes.roasting}</p>
+          </div>
+        </body>
+      </html>
     `;
-
+  
     const opt = {
       margin: 1,
       filename: `love-resume-${formData.name}.pdf`,
@@ -62,10 +87,9 @@ const PremamCV = () => {
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-
+  
     html2pdf().set(opt).from(content).save();
   };
-
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div

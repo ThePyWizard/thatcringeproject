@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import PremamCV from './pages/PremamCV';
 import Prediction from './pages/Prediction';
+
+import './utils/floatingHearts';
 import LoveQuiz from './pages/LoveQuiz';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
