@@ -60,12 +60,3 @@ Users input a few fun relationship-related answers, and the AI generates **two v
 | **localStorage**         | Saves user data for persistence   |
 
 ---
-
-## 🚀 Installation & Usage
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/your-username/premikoo.git
-cd premikoo
-```
