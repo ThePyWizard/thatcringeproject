@@ -2,6 +2,7 @@ export interface LoveResume {
   username: string;
   name: string;
   age: number;
+  gender: string;
   relationshipStatus: string;
   pastRelationships: number;
   noRelationshipReason?: string;

@@ -10,13 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
+    "framer-motion": "^11.0.5",
+    "groq-sdk": "^0.15.0",
+    "html2pdf.js": "^0.10.1",
     "lucide-react": "^0.344.0",
+    "openai": "^4.85.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.22.1",
-    "framer-motion": "^11.0.5",
-    "html2pdf.js": "^0.10.1",
-    "openai": "^4.28.0"
+    "react-router-dom": "^6.22.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

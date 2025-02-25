@@ -1,10 +1,11 @@
-import OpenAI from 'openai';
+import { Groq } from "groq-sdk";
 
-const DEMO_MODE = !import.meta.env.VITE_OPENAI_API_KEY;
+const DEMO_MODE = !import.meta.env.VITE_GROQ_API_KEY;
 
-const openai = DEMO_MODE ? null : new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
+// Initialize Groq API Client
+const groq = DEMO_MODE ? null : new Groq({
+  apiKey: import.meta.env.VITE_GROQ_API_KEY,
+  dangerouslyAllowBrowser: true,
 });
 
 export const generateLoveResume = async (data: any) => {
@@ -20,7 +21,7 @@ Attention brave souls! Meet ${data.name}, ${data.age} years young and still ${da
 
   const prompt = `Create two versions of a love resume for ${data.name}, age ${data.age}:
   1. A charming, positive version that highlights their best qualities
-  2. A humorous, roasting version that playfully pokes fun at their traits
+  2. A humorous, roasting version that playfully pokes fun at their traits. It should me a bit mean that makes them question their existence.
   
   Details to incorporate:
   - Current status: ${data.relationshipStatus}
@@ -31,12 +32,14 @@ Attention brave souls! Meet ${data.name}, ${data.age} years young and still ${da
   - Their idea of a perfect date: ${data.idealDate}
   
   Make the charming version warm and genuine, highlighting their self-awareness and growth.
-  Make the roasting version witty and playful without being mean-spirited.
-  Include specific references to their provided details in both versions.`;
+  Make the roasting version witty and playful. Keep it cool.
+  Include specific references to their provided details in both versions.
+  
+  Do not format the result in markdown`;
 
   try {
-    const response = await openai!.chat.completions.create({
-      model: "gpt-3.5-turbo",
+    const response = await groq.chat.completions.create({
+      model: "llama3-70b-8192",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.8,
       max_tokens: 1000,
@@ -44,8 +47,8 @@ Attention brave souls! Meet ${data.name}, ${data.age} years young and still ${da
 
     return response.choices[0].message.content;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
-    throw new Error('Failed to generate love resume. Please try again.');
+    console.error("Groq API Error:", error);
+    throw new Error("Failed to generate love resume. Please try again.");
   }
 };
 
@@ -82,13 +85,12 @@ Remember: Love is like your phone's battery - it dies when you need it most, but
   3. Three pieces of witty advice
   4. A funny but encouraging conclusion
   
-  Make it personal to their situation, age, and experience level.
-  Keep the humor light and supportive, not cynical.
-  Include specific references to their current relationship status and past experiences.`;
+  Keep it short and cool making it relatable to college students. Timeline should start from april 2025
+  Do not format the result in markdown`;
 
   try {
-    const response = await openai!.chat.completions.create({
-      model: "gpt-3.5-turbo",
+    const response = await groq.chat.completions.create({
+      model: "llama3-70b-8192",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.8,
       max_tokens: 800,
@@ -96,52 +98,45 @@ Remember: Love is like your phone's battery - it dies when you need it most, but
 
     return response.choices[0].message.content;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
-    throw new Error('Failed to generate prediction. Please try again.');
+    console.error("Groq API Error:", error);
+    throw new Error("Failed to generate prediction. Please try again.");
   }
 };
 
 export const calculateCompatibility = async (answers1: any, answers2: any) => {
   if (DEMO_MODE) {
-    // Generate a more dynamic demo response based on actual answers
     const commonAnswers = Object.keys(answers1).filter(
-      key => answers1[key].toLowerCase() === answers2[key].toLowerCase()
+      (key) => answers1[key].toLowerCase() === answers2[key].toLowerCase()
     );
-    const compatibilityScore = Math.round((commonAnswers.length / Object.keys(answers1).length) * 100);
+    const compatibilityScore = Math.round(
+      (commonAnswers.length / Object.keys(answers1).length) * 100
+    );
 
     return `💘 Compatibility Score: ${compatibilityScore}%
 
 What You Have in Common:
-${commonAnswers.map(key => `- Both of you ${answers1[key]}`).join('\n')}
+${commonAnswers.map((key) => `- Both of you ${answers1[key]}`).join("\n")}
 
 Potential Friction Points:
 ${Object.keys(answers1)
-  .filter(key => answers1[key] !== answers2[key])
+  .filter((key) => answers1[key] !== answers2[key])
   .slice(0, 3)
-  .map(key => `- One prefers "${answers1[key]}" while the other chooses "${answers2[key]}"`)
-  .join('\n')}
+  .map((key) => `- One prefers "${answers1[key]}" while the other chooses "${answers2[key]}"`)
+  .join("\n")}
 
 Relationship Advice:
 1. Celebrate your similarities, laugh about your differences
 2. Communication is key (especially when deciding what's for dinner)
-3. Remember: Perfect couples don't exist, but perfect effort does!
-
-Overall: You're like ${compatibilityScore > 75 ? 'peanut butter and jelly' : 'sweet and sour'} - ${
-      compatibilityScore > 75 ? 'a classic combination' : 'different but complementary'
-    }! 💑`;
+3. Remember: Perfect couples don't exist, but perfect effort does!`;
   }
 
   const prompt = `Create a detailed compatibility analysis based on these quiz answers:
   
   Person 1's answers:
-  ${Object.entries(answers1)
-    .map(([q, a]) => `Q: ${q}\nA: ${a}`)
-    .join('\n')}
+  ${Object.entries(answers1).map(([q, a]) => `Q: ${q}\nA: ${a}`).join("\n")}
   
   Person 2's answers:
-  ${Object.entries(answers2)
-    .map(([q, a]) => `Q: ${q}\nA: ${a}`)
-    .join('\n')}
+  ${Object.entries(answers2).map(([q, a]) => `Q: ${q}\nA: ${a}`).join("\n")}
   
   Include:
   1. A specific compatibility percentage based on answer alignment
@@ -149,13 +144,11 @@ Overall: You're like ${compatibilityScore > 75 ? 'peanut butter and jelly' : 'sw
   3. Thoughtful discussion of potential areas for growth
   4. Practical and humorous advice for navigating differences
   
-  Make the analysis personal and specific to their actual answers.
-  Balance humor with genuine insight.
-  Provide constructive suggestions for building on their compatibility.`;
+  Do not format the result in markdown`;
 
   try {
-    const response = await openai!.chat.completions.create({
-      model: "gpt-3.5-turbo",
+    const response = await groq.chat.completions.create({
+      model: "llama3-70b-8192",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
@@ -163,7 +156,7 @@ Overall: You're like ${compatibilityScore > 75 ? 'peanut butter and jelly' : 'sw
 
     return response.choices[0].message.content;
   } catch (error) {
-    console.error('OpenAI API Error:', error);
-    throw new Error('Failed to calculate compatibility. Please try again.');
+    console.error("Groq API Error:", error);
+    throw new Error("Failed to calculate compatibility. Please try again.");
   }
 };
