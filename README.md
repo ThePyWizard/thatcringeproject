@@ -54,7 +54,7 @@ Users input a few fun relationship-related answers, and the AI generates **two v
 
 | Technology               | Purpose                           |
 | ------------------------ | --------------------------------- |
-| **HTML, CSS, JS**        | Frontend Development              |
+| **React**        | Frontend Development              |
 | **Framer Motion**        | Smooth UI Animations              |
 | **JSON File (Frontend)** | Stores resume data & quiz results |
 | **localStorage**         | Saves user data for persistence   |
